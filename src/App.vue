@@ -40,6 +40,9 @@ export default {
   height: 1.2rem;
   display:flex;
   justify-content:space-around;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 .img-box{

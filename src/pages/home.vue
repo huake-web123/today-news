@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div v-for="item in newsArr" :key="item.id" class="news">
+    <div v-for="item in newsArr" class="news">
       <img v-bind:src="item.thumb_url">
       <div class="content">
         <div class="content-title">{{item.title}}</div>
         <div class="content-foot">
           <span class="txt-type">{{item.category | categoryFilters}}</span>
           <span class="comments">{{item.comments_counts}}&nbsp;评论</span>
-          <span class="date">{{item.created_at | dateFilters}}</span>
+          <span class="date">&middot;&nbsp;{{item.created_at | dateFilters}}</span>
         </div>
       </div>
     </div>
-    <!--{{msg}}-->
+    <div class="load-more-btn" @click="loadMore">加载更多</div>
   </div>
 </template>
 
@@ -21,7 +21,8 @@ export default {
   data () {
     return {
       msg: 'home',
-      newsArr: []
+      newsArr: [],
+      page: '1'
     }
   },
   filters: {
@@ -49,7 +50,7 @@ export default {
     dateFilters (timestamp) {
       var date = new Date(timestamp * 1000)
       var Y = date.getFullYear() + '-'
-      var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-'
+      var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
       var D = date.getDate() + ' '
       var h = date.getHours() + ':'
       var m = date.getMinutes() + ':'
@@ -67,6 +68,19 @@ export default {
         this.newsArr = res.data.data
       })
     })
+  },
+  methods: {
+    loadMore () {
+      alert('让开，我要发动加载新数据了')
+      this.page++
+      this.$ajax({
+        method: 'get',
+        url: 'http://restaurant.yijiahotel.shop/v1/news/' + this.page + '/10'
+      }).then((res) => {
+        console.log(res)
+        this.newsArr.push(...res.data.data)
+      })
+    }
   }
 }
 </script>
@@ -82,11 +96,11 @@ export default {
     border-bottom:1px solid #ccc;
   }
   .news img{
-    width:2.4rem;
+    width:2.3rem;
     height:2rem;
   }
   .content{
-    margin-left:0.2rem;
+    margin-left:0.1rem;
     margin-top:0.1rem;
   }
   .content-title{
@@ -95,13 +109,13 @@ export default {
     margin-top:0.1rem;
   }
   .content-foot{
-    margin-top:0.1rem;
+    margin-top:0.2rem;
   }
   .content-foot span{
     color:#7A7777;
   }
   .txt-type{
-    font-size:0.25rem;
+    font-size:0.2rem;
     border:1px solid #ccc;
     padding:0.05rem;
   }
@@ -110,5 +124,16 @@ export default {
   }
   .date{
     font-size:0.2rem;
+  }
+  .load-more-btn{
+    position: fixed;
+    bottom: 2rem;
+    right: .3rem;
+    height: 1rem;
+    width: 1.6rem;
+    z-index: 1000;
+    background-color: red;
+    color: #fff;
+    font-size: .14rem;
   }
 </style>
