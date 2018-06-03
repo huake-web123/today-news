@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="whole-content">
     <div v-for="item in newsArr" class="news">
       <img v-bind:src="item.thumb_url">
       <div class="content">
@@ -60,19 +60,16 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      this.$ajax({
-        method: 'get',
-        url: 'http://restaurant.yijiahotel.shop/v1/news/1/10'
-      }).then((res) => {
-        console.log(res)
-        this.newsArr = res.data.data
-      })
+      this.loadData()
     })
   },
   methods: {
     loadMore () {
       alert('让开，我要发动加载新数据了')
       this.page++
+      this.loadData()
+    },
+    loadData () {
       this.$ajax({
         method: 'get',
         url: 'http://restaurant.yijiahotel.shop/v1/news/' + this.page + '/10'
@@ -84,8 +81,10 @@ export default {
   }
 }
 </script>
-
 <style scoped>
+  .whole-content{
+    padding-bottom:1.2rem;
+  }
   .news{
     /*height:2.45rem;*/
     display:flex;
@@ -102,6 +101,7 @@ export default {
   .content{
     margin-left:0.1rem;
     margin-top:0.1rem;
+
   }
   .content-title{
     color:black;
